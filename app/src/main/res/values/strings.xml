@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Navigation</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps">MapsActivity</string>
+
+    <!-- Generic -->
+    <string name="genericOk">OK</string>
+    <string name="genericCancel">Cancel</string>
+    <string name="genericLoading">Loading…</string>
+
+    <!-- Prompts -->
+    <string name="promptDriveTitle">Direction</string>
+    <string name="promptDriveText">Choose an option</string>
+    <string name="promptDriveDriveHere">Drive here</string>
+    <string name="promptDriveSearch">Search for a destination</string>
+    <string name="promptDriveCancel">Cancel current route</string>
+
+    <!-- Prompts Drive Mode-->
+    <string name="promptModeTitle">Driving Mode Select</string>
+    <string name="promptModeText">Choose an option</string>
+    <string name="promptDrivingMode">Driving</string>
+    <string name="promptBicyclingMode">Bicycling</string>
+    <string name="promptWalkingMode">Walking</string>
+
+
+
+</resources>
