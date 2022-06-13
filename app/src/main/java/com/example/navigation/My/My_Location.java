@@ -115,10 +115,10 @@ public class My_Location {
         mMap = Map;
         init_CallBack();
         init_Record_CallBack();
-        my_gps = new My_GPS(context);
-        my_network = new My_Network(context);
-    }
+        my_gps = new My_GPS(context, this);
+        my_network = new My_Network(context, this);
 
+    }
     public void init_CallBack() {
         callback = new GoogleMap.CancelableCallback() {
             @Override
@@ -154,6 +154,10 @@ public class My_Location {
         };
     }
 
+    public void set_now_position(LatLng point){
+        now_position = point;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void set_location() {
         double lat;
@@ -162,6 +166,9 @@ public class My_Location {
         //------------------------------------------
         my_gps.get_gps();
         my_network.set_listener();
+
+
+
         //------------------------------------------
 
 
@@ -306,9 +313,9 @@ public class My_Location {
         destination_position = point;
         points.clear();
     }
-    public void add_Now_Mark(){
-        //now_marker.position(point);
-
+    public void add_Now_Mark(LatLng point){
+        now_marker.icon(BitmapFromVector(R.drawable.ic_location));
+        now_marker.position(point);
         marker = mMap.addMarker(now_marker);
     }
     public void change_map(LatLng point){
@@ -319,25 +326,20 @@ public class My_Location {
         change_mark(point);
         change_camera(point, zoom, bearing, tilt);
     }
+    public void change_mark(){
+        marker.setPosition(now_position);
+    }
     public void change_mark(LatLng point){
-        //marker.remove();
-        if(marker!=null){
-            marker.remove();
-        }
-        //remove_mk();
-
-//        if(my_data.novigation_status) {
-//            GroundOverlayOptions newarkMap = new GroundOverlayOptions()
-//                .image(BitmapFromVector(R.drawable.mk_user_arrow))
-//                .position(now_position, 5f, 5f)
-//                .bearing(my_data.bearing);
-//        mMap.addGroundOverlay(newarkMap);
-//        }
-//        else{
-            now_marker.icon(BitmapFromVector(R.drawable.ic_location));
-            now_marker.position(point);
-            marker = mMap.addMarker(now_marker);
-        //}
+        marker.setPosition(point);
+    }
+    public void change_camera(){
+        cameraPosition = new CameraPosition.Builder()
+                .target(now_position)
+                .zoom(mMap.getCameraPosition().zoom)
+                .bearing(mMap.getCameraPosition().bearing)
+                .tilt(mMap.getCameraPosition().tilt)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
     public void change_camera(LatLng point){
         cameraPosition = new CameraPosition.Builder()
@@ -403,6 +405,27 @@ public class My_Location {
                 .position(point, 9f, 9f)
                 .bearing(bearing);
         UserOverlay = mMap.addGroundOverlay(newarkMap);
+    }
+    public void change_camera_novigation(LatLng point){
+        //remove_Overlay();
+        cameraPosition = new CameraPosition.Builder()
+                .target(point)
+                .zoom(mMap.getCameraPosition().zoom)
+                .bearing(mMap.getCameraPosition().bearing)
+                .tilt(mMap.getCameraPosition().tilt)
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+//        GroundOverlayOptions newarkMap = new GroundOverlayOptions()
+//                .image(BitmapFromVector(R.drawable.mk_user_arrow))
+//                .position(point, 10f, 10f)
+//                .bearing(bearing);
+//        UserOverlay = mMap.addGroundOverlay(newarkMap);
+        UserOverlay.setBearing(mMap.getCameraPosition().bearing);
+        UserOverlay.setPosition(point);
+
+        //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 1000, callback);
+
+        //mMap.moveCamera(CameraUpdateFactory.scrollBy(0, -540));
     }
     public void change_camera_novigation(LatLng point, float zoom, float bearing, float tilt){
         //remove_Overlay();
@@ -521,7 +544,6 @@ public class My_Location {
         My_Sensor my_sensor = new My_Sensor(context, ll);
         my_sensor.registerListener();
     }
-
 
 
     //remove----------------------------------------------------------------------------

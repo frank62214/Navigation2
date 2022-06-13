@@ -41,32 +41,45 @@ public class My_Navigation implements Runnable {
     @RequiresApi(api = Build.VERSION_CODES.S)
     @Override
     public void run() {
+        //init_camera();
         get_parameter();
-        int count = 0;
+        int count = 1;
         while (true){
             refresh_parameter();
-            distance = my_calcuate.camera_dis_cal(now_position, points.get(count));
-            road         = my_data.Road.get(count);
-            road_detail  = my_data.Road_Detail.get(count);
-            Set_Turn_Pic(road_detail);
-            if(distance<10){
-                count++;
-            }
-            if(my_data.Record_status){
-                System.out.println("Record Start");
-                history_points.add(now_position);
+            distance = my_calcuate.camera_dis_cal(now_position, points.get(count - 1));
+            if(points.size()>count) {
+                road = my_data.Road.get(count);
+                road_detail = my_data.Road_Detail.get(count);
+                Set_Turn_Pic(road_detail);
+                if (distance < 15) {
+                    count++;
+                }
+                if (my_data.Record_status) {
+                    System.out.println("Record Start");
+                    history_points.add(now_position);
+                } else {
+                    System.out.println("Record End");
+                    history_points.removeAll(history_points);
+                    clear_history_points();
+                }
             }
             else{
-                System.out.println("Record End");
-                history_points.removeAll(history_points);
-                clear_history_points();
+                road = "即將抵達目的地";
+                road_detail = "";
             }
             get_main_thread();
             SystemClock.sleep(1000);
         }
     }
 
-
+    private void init_camera(){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                System.out.println("FYBR");
+                my_location.change_camera_novigation(now_position, 20, 0, 30);
+            }
+        });
+    }
 
     private void get_main_thread(){
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -74,7 +87,7 @@ public class My_Navigation implements Runnable {
                 //my_location.change_camera_novigation();
                 //my_location.scrollBy();
                 System.out.println("現在位置" + now_position);
-                my_location.change_camera_novigation(now_position, 20, now_bearing, 30);
+                my_location.change_camera_novigation(now_position,20,now_bearing,30);
                 my_location.Draw_History_Point(history_points);
                 my_layout.setNextRoadText(road);
                 my_layout.setNextRoadDetailText(road_detail);

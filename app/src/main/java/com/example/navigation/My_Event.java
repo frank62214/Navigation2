@@ -22,6 +22,7 @@ import com.example.navigation.My.My_Location;
 import com.example.navigation.My.My_Navigation;
 import com.example.navigation.My.My_Record;
 import com.example.navigation.My.My_Sensor;
+import com.example.navigation.My.My_UI;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -226,8 +227,8 @@ public class My_Event {
             @Override
             public void onClick(View view) {
 //                System.out.println("FYBR");
-                my_layout.tv_GPS_Count.setText(my_data.GPS);
-                my_data.count++;
+                //my_layout.tv_GPS_Count.setText(my_data.GPS);
+                //my_data.count++;
 
 //                my_data.page_name = "Record";
 //                my_layout.get_page(my_data.page_name);
@@ -252,7 +253,32 @@ public class My_Event {
             }
         });
     }
+    public void setResource_event(){
+        ImageButton imageButton = my_layout.btnSelectResource;
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                System.out.println("now status:" + my_data.Select_Resource);
+                if(my_data.Select_Resource.equals("Network")){
+                    my_data.Select_Resource = "GPS";
+//                    my_data.Refresh_Satellites = true;
+//                    My_UI my_ui = new My_UI(my_layout.tv_Now_Satellite);
+//                    Thread t = new Thread(my_ui);
+//                    t.start();
+                }
+                else if(my_data.Select_Resource.equals("GPS")){
+                    my_data.Select_Resource = "Network";
+                }
+                my_layout.changeResourceIcon();
+                System.out.println("Change to " + my_data.Select_Resource);
 
+                my_layout.tv_GPS_Count.setText(my_data.GPS);
+
+
+            }
+        });
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void close_keyboard(View view){

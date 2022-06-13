@@ -14,8 +14,11 @@ public class My_Data {
     //GPS
     public static String GPS;
     public static int count;
+    public static boolean Refresh_Satellites = false;
     public static boolean Record_status = false;
     public static int Satellites_number;
+    public static String Select_Resource = "Network";
+    public static LatLng now_position = null;
 
     //Search JSON Tag
     public static ArrayList<String> Result   = new ArrayList<String>();

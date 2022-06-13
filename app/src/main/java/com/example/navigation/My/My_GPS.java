@@ -32,6 +32,7 @@ public class My_GPS {
     private Context context;
     private LocationManager lm;
 
+    private My_Location my_location;
     private My_Data my_data = new My_Data();
 
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日HH:mm:ss");
@@ -39,8 +40,9 @@ public class My_GPS {
     Date curDate = new Date(System.currentTimeMillis()) ; // 獲取當前時間
 
 
-    public My_GPS(Context con) {
+    public My_GPS(Context con, My_Location location) {
         context = con;
+        my_location = location;
     }
 
     public LatLng getNow_position() {

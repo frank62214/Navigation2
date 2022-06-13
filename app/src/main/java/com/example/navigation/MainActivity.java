@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        });
         my_event.set_Drive_Mode();
         my_event.set_Record_event();
+        my_event.setResource_event();
     }
     private void setText(ArrayList<String> data){
 //        my_layout.setText(MainActivity.this, data);
@@ -226,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(Main_Direction_Mode.equals(getResources().getString(R.string.promptDriveDriveHere))){
             my_location.remove_destination_mark();
             my_location.remove_map();
-            my_location.add_Now_Mark();
+            //my_location.add_Now_Mark();
             my_location.add_Destination_Mark(point);
             Toast.makeText(this, "終點已設置", Toast.LENGTH_LONG).show();
             String url = "https://maps.googleapis.com/maps/api/directions/json" +

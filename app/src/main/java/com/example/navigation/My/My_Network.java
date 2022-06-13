@@ -17,6 +17,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class My_Network {
     private Context context;
+    private My_Location my_location;
+    private My_Data my_data = new My_Data();
 
     private LatLng now_position;
 
@@ -26,8 +28,9 @@ public class My_Network {
     private int MY_PERMISSION_ACCESS_COARSE_LOCATION = 11;
     private LocationListener locationListenerNetwork;
     private LocationManager locationManager;
-    public My_Network(Context con){
+    public My_Network(Context con, My_Location location){
         context = con;
+        my_location = location;
     }
     public void set_listener(){
         if (ActivityCompat.checkSelfPermission(context,
@@ -51,34 +54,6 @@ public class My_Network {
             //取得系統服務(GPS)
             locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
 
-            //if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            //    commandStr = LocationManager.GPS_PROVIDER;
-            //}
-
-
-            GpsStatus.Listener gpsListener = new GpsStatus.Listener() {
-                @Override
-                public void onGpsStatusChanged(int event) {
-                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                    GpsStatus status = locationManager.getGpsStatus(null); //取當前狀態
-                    switch (event) {
-                        case GpsStatus.GPS_EVENT_STARTED:
-                            System.out.println("GPS_EVENT_STARTED");
-                        case GpsStatus.GPS_EVENT_STOPPED:
-                            System.out.println("GPS_EVENT_STOPPED");
-                        case GpsStatus.GPS_EVENT_FIRST_FIX:
-                            System.out.println("GPS_EVENT_FIRST_FIX");
-                        case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                            System.out.println("GPS_EVENT_SATELLITE_STATUS");
-                            int maxSatellites = status.getMaxSatellites();
-                            //my_data.GPS = String.valueOf(maxSatellites);
-                    }
-                }
-            };
-            locationManager.addGpsStatusListener(gpsListener);
-
             //設定更新速度與距離
             locationManager.requestLocationUpdates(
                     commandStr,
@@ -86,21 +61,34 @@ public class My_Network {
                     MIN_DISTANCE_CHANGE_FOR_UPDATES, locationListenerNetwork);
             //如果沒移動(或是沒有網路)取得先前位置，如果沒有上面刷新，就會是手機最後定位的位置
             Location location = locationManager.getLastKnownLocation(commandStr);
-//            if(location==null){
-//                System.out.println("使用網路定位");
-//                commandStr = LocationManager.NETWORK_PROVIDER;
-//                location = locationManager.getLastKnownLocation(commandStr);
-//            }
             //取得經緯度
             double lat = location.getLatitude();
             double lng = location.getLongitude();
 
             now_position = new LatLng(lat, lng);
+            my_data.now_position = now_position;
+            my_data.Origin = now_position;
+            //first time add now marker and move camera
+            my_location.change_camera(now_position,15);
+            my_location.add_Now_Mark(now_position);
         }
     }
     private void LocationChange(Location location){
-        now_position = new LatLng(location.getLatitude(), location.getLongitude());
-        String msg = "New Position from Network:" + now_position;
-        System.out.println(msg);
+        if(my_data.Select_Resource.equals("Network")) {
+            now_position = new LatLng(location.getLatitude(), location.getLongitude());
+            String msg = "New Position from Network:" + now_position;
+            System.out.println(msg);
+            my_location.set_now_position(now_position);
+            my_location.change_camera();
+            my_location.change_mark();
+            my_data.Origin = now_position;
+        }
     }
+//    public void getLocation(final onLocationChangeCallBack callBack){
+//        callBack.LocationChange(now_position);
+//    }
+//
+//    interface onLocationChangeCallBack{
+//        void LocationChange(LatLng position);
+//    }
 }

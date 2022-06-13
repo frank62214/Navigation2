@@ -59,6 +59,7 @@ public class My_Layout extends RelativeLayout {
     public ImageButton Drive_mode;
     public ImageButton pg4_navigation;
     public ImageButton btnRouteRecord;
+    public ImageButton btnSelectResource;
 
     //dialog
     public View search_view;
@@ -150,6 +151,7 @@ public class My_Layout extends RelativeLayout {
         focus           = (ImageButton) layout_view.findViewById(R.id.btnFocusUser);
         navigation      = (ImageButton) layout_view.findViewById(R.id.btnNavigation);
         btnRouteRecord  = (ImageButton) layout_view.findViewById(R.id.btnRouteRecord);
+        btnSelectResource = (ImageButton) layout_view.findViewById(R.id.btnSelectResource);
         llNavButtons    = (LinearLayout) layout_view.findViewById(R.id.llNavButtonsCanvas);
         introduce       = (LinearLayout) layout_view.findViewById(R.id.introduce);
 
@@ -275,6 +277,14 @@ public class My_Layout extends RelativeLayout {
         }
         if(name.equals(getResources().getString(R.string.promptWalkingMode))){
             Drive_mode.setImageResource(R.drawable.walk);
+        }
+    }
+    public void changeResourceIcon(){
+        if(my_data.Select_Resource.equals("Network")){
+            btnSelectResource.setImageResource(R.drawable.ic_wifi);
+        }
+        if(my_data.Select_Resource.equals("GPS")){
+            btnSelectResource.setImageResource(R.drawable.ic_satellite);
         }
     }
     public void resetRadio(String name){
