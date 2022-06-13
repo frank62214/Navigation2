@@ -104,6 +104,7 @@ public class My_Location {
     GroundOverlay UserOverlay;
 
     public My_GPS my_gps;
+    public My_Network my_network;
 
     public Location now_location;
 
@@ -115,6 +116,7 @@ public class My_Location {
         init_CallBack();
         init_Record_CallBack();
         my_gps = new My_GPS(context);
+        my_network = new My_Network(context);
     }
 
     public void init_CallBack() {
@@ -159,88 +161,89 @@ public class My_Location {
 
         //------------------------------------------
         my_gps.get_gps();
+        my_network.set_listener();
         //------------------------------------------
 
 
         //取得APP對手機服務的權限(GPS)
-        if (ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(context,
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) context,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    MY_PERMISSION_ACCESS_COARSE_LOCATION);
-            set_location();
-        } else {
-            //設定監聽如果有新位置時所做的事情
-            locationListenerGPS = new LocationListener() {
-                @Override
-                public void onLocationChanged(@NonNull android.location.Location location) {
-                    LocationChange(location);
-                }
-            };
-
-
-            //取得系統服務(GPS)
-            locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
-
-            //if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            //    commandStr = LocationManager.GPS_PROVIDER;
-            //}
-
-
-            GpsStatus.Listener gpsListener = new GpsStatus.Listener() {
-                @Override
-                public void onGpsStatusChanged(int event) {
-                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        return;
-                    }
-                    GpsStatus status = locationManager.getGpsStatus(null); //取當前狀態
-                    switch (event) {
-                        case GpsStatus.GPS_EVENT_STARTED:
-                            System.out.println("GPS_EVENT_STARTED");
-                        case GpsStatus.GPS_EVENT_STOPPED:
-                            System.out.println("GPS_EVENT_STOPPED");
-                        case GpsStatus.GPS_EVENT_FIRST_FIX:
-                            System.out.println("GPS_EVENT_FIRST_FIX");
-                        case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                            System.out.println("GPS_EVENT_SATELLITE_STATUS");
-                            int maxSatellites = status.getMaxSatellites();
-                            //my_data.GPS = String.valueOf(maxSatellites);
-                    }
-                }
-            };
-            locationManager.addGpsStatusListener(gpsListener);
-
-            //設定更新速度與距離
-            locationManager.requestLocationUpdates(
-                    commandStr,
-                    MIN_TIME_BW_UPDATES,
-                    MIN_DISTANCE_CHANGE_FOR_UPDATES, locationListenerGPS);
-            //如果沒移動(或是沒有網路)取得先前位置，如果沒有上面刷新，就會是手機最後定位的位置
-            Location location = locationManager.getLastKnownLocation(commandStr);
-//            if(location==null){
-//                System.out.println("使用網路定位");
-//                commandStr = LocationManager.NETWORK_PROVIDER;
-//                location = locationManager.getLastKnownLocation(commandStr);
-//            }
-            //取得經緯度
-            lat = location.getLatitude();
-            lng = location.getLongitude();
-            //change_map(new LatLng(lat, lng), 15);
-            //System.out.println(lat);
-            //System.out.println(lng);
-
-            now_position = new LatLng(lat, lng);
-            //my_data.Origin = now_position;
-            // Move the camera instantly to Sydney with a zoom of 15.
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(now_position));
-            //past_route.add(now_position);
-            change_map(now_position,
-                    15,
-                    mMap.getCameraPosition().bearing,
-                    mMap.getCameraPosition().tilt);
-        }
+//        if (ActivityCompat.checkSelfPermission(context,
+//                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+//                ActivityCompat.checkSelfPermission(context,
+//                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions((Activity) context,
+//                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+//                    MY_PERMISSION_ACCESS_COARSE_LOCATION);
+//            set_location();
+//        } else {
+//            //設定監聽如果有新位置時所做的事情
+//            locationListenerGPS = new LocationListener() {
+//                @Override
+//                public void onLocationChanged(@NonNull android.location.Location location) {
+//                    LocationChange(location);
+//                }
+//            };
+//
+//
+//            //取得系統服務(GPS)
+//            locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+//
+//            //if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//            //    commandStr = LocationManager.GPS_PROVIDER;
+//            //}
+//
+//
+//            GpsStatus.Listener gpsListener = new GpsStatus.Listener() {
+//                @Override
+//                public void onGpsStatusChanged(int event) {
+//                    if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                        return;
+//                    }
+//                    GpsStatus status = locationManager.getGpsStatus(null); //取當前狀態
+//                    switch (event) {
+//                        case GpsStatus.GPS_EVENT_STARTED:
+//                            System.out.println("GPS_EVENT_STARTED");
+//                        case GpsStatus.GPS_EVENT_STOPPED:
+//                            System.out.println("GPS_EVENT_STOPPED");
+//                        case GpsStatus.GPS_EVENT_FIRST_FIX:
+//                            System.out.println("GPS_EVENT_FIRST_FIX");
+//                        case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+//                            System.out.println("GPS_EVENT_SATELLITE_STATUS");
+//                            int maxSatellites = status.getMaxSatellites();
+//                            //my_data.GPS = String.valueOf(maxSatellites);
+//                    }
+//                }
+//            };
+//            locationManager.addGpsStatusListener(gpsListener);
+//
+//            //設定更新速度與距離
+//            locationManager.requestLocationUpdates(
+//                    commandStr,
+//                    MIN_TIME_BW_UPDATES,
+//                    MIN_DISTANCE_CHANGE_FOR_UPDATES, locationListenerGPS);
+//            //如果沒移動(或是沒有網路)取得先前位置，如果沒有上面刷新，就會是手機最後定位的位置
+//            Location location = locationManager.getLastKnownLocation(commandStr);
+////            if(location==null){
+////                System.out.println("使用網路定位");
+////                commandStr = LocationManager.NETWORK_PROVIDER;
+////                location = locationManager.getLastKnownLocation(commandStr);
+////            }
+//            //取得經緯度
+//            lat = location.getLatitude();
+//            lng = location.getLongitude();
+//            //change_map(new LatLng(lat, lng), 15);
+//            //System.out.println(lat);
+//            //System.out.println(lng);
+//
+//            now_position = new LatLng(lat, lng);
+//            //my_data.Origin = now_position;
+//            // Move the camera instantly to Sydney with a zoom of 15.
+//            mMap.moveCamera(CameraUpdateFactory.newLatLng(now_position));
+//            //past_route.add(now_position);
+//            change_map(now_position,
+//                    15,
+//                    mMap.getCameraPosition().bearing,
+//                    mMap.getCameraPosition().tilt);
+//        }
     }
     @RequiresApi(api = Build.VERSION_CODES.S)
     public void Get_Location() {
