@@ -96,7 +96,11 @@ public class My_Navigation implements Runnable {
     }
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void Set_Turn_Pic(String text){
-        my_layout.Set_Turn_Pic(text);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            public void run() {
+                my_layout.Set_Turn_Pic(text);
+            }
+        });
     }
     private void get_parameter(){
         points = my_data.steps;
