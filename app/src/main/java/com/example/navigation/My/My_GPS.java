@@ -51,6 +51,7 @@ public class My_GPS {
     public int getSatellites_number(){return Satellites_number;}
 
     public void get_gps() {
+        //取得系統功能
         lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         //为获取地理位置信息时设置查询条件
         String bestProvider = lm.getBestProvider(getCriteria(), true);

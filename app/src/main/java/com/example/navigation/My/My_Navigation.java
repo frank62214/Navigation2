@@ -34,8 +34,6 @@ public class My_Navigation implements Runnable {
         my_location = location;
         my_gps = location.my_gps;
         my_layout = layout;
-
-        //my_location.Register_Sensor();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.S)

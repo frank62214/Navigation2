@@ -90,7 +90,8 @@
                 android:layout_marginRight="5dp"
                 android:background="@drawable/btn_round"
                 app:srcCompat="@drawable/ic_wifi"
-                tools:ignore="ContentDescription,InvalidId" />
+                tools:ignore="ContentDescription,InvalidId"
+                android:visibility="gone"/>
 
 
         </LinearLayout>

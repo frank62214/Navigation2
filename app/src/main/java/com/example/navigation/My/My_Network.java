@@ -84,11 +84,4 @@ public class My_Network {
             my_data.Origin = now_position;
         }
     }
-//    public void getLocation(final onLocationChangeCallBack callBack){
-//        callBack.LocationChange(now_position);
-//    }
-//
-//    interface onLocationChangeCallBack{
-//        void LocationChange(LatLng position);
-//    }
 }
