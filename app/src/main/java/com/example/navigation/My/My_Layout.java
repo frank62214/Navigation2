@@ -389,6 +389,9 @@ public class My_Layout extends RelativeLayout {
     }
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void get_page(String name){
+        if(name.equals("Search")){
+            Search_Page();
+        }
         if(name.equals("Record")){
             Record_Page();
         }
@@ -448,6 +451,21 @@ public class My_Layout extends RelativeLayout {
         Drive_mode.setVisibility(View.GONE);
         check_introduce_visible(false);
         llUserArrow.setVisibility(View.VISIBLE);
+    }
+    private void Search_Page(){
+        rlSearch.setVisibility(View.VISIBLE);
+        //direction_text.setText("");
+        Search.setEnabled(false);
+        my_data.RelativeLayout_Search_v = false;
+        check_rlSearch_backgroundColor();
+        my_data.ScrollView_Result_v = false;
+        check_scrollview_visiable();
+        check_introduce_visible(false);
+        navigation.setVisibility(View.VISIBLE);
+        Clear_Result_ll();
+        my_location.remove_destination_mark();
+        my_location.Focus_user();
+        Clear_Result_ll();
     }
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void Record_Page(){

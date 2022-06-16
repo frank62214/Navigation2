@@ -26,7 +26,9 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.navigation.MainActivity;
 import com.example.navigation.R;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -108,50 +110,16 @@ public class My_Location {
 
     public Location now_location;
 
+    private GoogleApiClient mGoogleApiClient;
+
     //init
     @RequiresApi(api = Build.VERSION_CODES.N)
     public My_Location(Context Activity_context, GoogleMap Map) {
         context = Activity_context;
         mMap = Map;
-        init_CallBack();
-        init_Record_CallBack();
         my_gps = new My_GPS(context, this);
         my_network = new My_Network(context, this);
 
-    }
-    public void init_CallBack() {
-        callback = new GoogleMap.CancelableCallback() {
-            @Override
-            public void onCancel() {
-                System.out.println("FYBR1");
-            }
-
-            @Override
-            public void onFinish() {
-                System.out.println("FYBR2");
-                //mMap.animateCamera(CameraUpdateFactory.scrollBy(0, -540), 1000, record_callback);
-                mMap.animateCamera(CameraUpdateFactory.scrollBy(0, -540));
-                //my_data.camera_position = mMap.getCameraPosition().target;
-                //My_Record my_record = new My_Record(mMap);
-                //Thread t = new Thread(my_record);
-                //t.start();
-            }
-        };
-    }
-
-    public void init_Record_CallBack() {
-        record_callback = new GoogleMap.CancelableCallback() {
-            @Override
-            public void onCancel() {
-            }
-
-            @Override
-            public void onFinish() {
-                My_Record my_record = new My_Record(mMap);
-                Thread t = new Thread(my_record);
-                t.start();
-            }
-        };
     }
 
     public void set_now_position(LatLng point){
@@ -160,12 +128,11 @@ public class My_Location {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void set_location() {
-        double lat;
-        double lng;
+
 
         //------------------------------------------
-        my_gps.get_gps();
-        my_network.set_listener();
+        //my_gps.get_gps();
+        //my_network.set_listener();
         //------------------------------------------
 
 
