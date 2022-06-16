@@ -3,8 +3,11 @@ package com.example.navigation;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,11 +29,12 @@ import com.example.navigation.My.My_Location;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
 
     private static My_Layout my_layout;
@@ -69,23 +73,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        my_location = new My_Location(this, mMap);
-        my_location.set_location();
-        my_event.InitLocation(my_location);
-        my_layout.InitLocation(my_location);
-        page_switch[0] = true;
-        page_switch[1] = true;
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(@NonNull LatLng latlng) {
-                Check_Main_Direction_Mode(latlng);
-            }
-        });
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+        UiSettings UI  = mMap.getUiSettings();
+        UI.setMyLocationButtonEnabled(false);
+//        my_location = new My_Location(this, mMap);
+//        my_location.set_location();
+//        my_event.InitLocation(my_location);
+//        my_layout.InitLocation(my_location);
+//        page_switch[0] = true;
+//        page_switch[1] = true;
+//        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+//            @Override
+//            public void onMapLongClick(@NonNull LatLng latlng) {
+//                Check_Main_Direction_Mode(latlng);
+//            }
+//        });
     }
     private void set_Listener(){
         ImageButton focus = my_layout.focus;
